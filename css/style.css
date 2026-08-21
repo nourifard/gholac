@@ -1,250 +1,683 @@
+/* ==================== Reset و پایه ==================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Vazir', 'IRANSans', 'Tahoma', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    color: #333;
-    line-height: 1.6;
+:root {
+    --primary-color: #4f46e5;
+    --primary-dark: #3730a3;
+    --primary-light: #818cf8;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --card-bg: #ffffff;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --border-radius: 12px;
+    --border-radius-sm: 8px;
+    --border-radius-lg: 16px;
 }
 
+body {
+    font-family: 'Vazir', 'IRANSans', 'IRANSansX', 'Tahoma', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    color: var(--text-primary);
+    line-height: 1.6;
+    direction: rtl;
+}
+
+/* ==================== هدر ==================== */
 .header {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    background: var(--bg-gradient);
     color: white;
-    text-align: center;
     padding: 2rem 1rem;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: headerGlow 10s ease-in-out infinite;
+}
+
+@keyframes headerGlow {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    50% {
+        transform: translate(-10%, -10%);
+    }
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
 .header h1 {
     font-size: 2.5rem;
-    margin-bottom: 0.5rem;
     font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.header h1 i {
+    margin-left: 10px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
 }
 
 .header p {
-    font-size: 1.2rem;
-    opacity: 0.9;
+    font-size: 1.1rem;
+    opacity: 0.95;
+    font-weight: 300;
 }
 
-.fund-tabs {
+/* ==================== کانتینر اصلی ==================== */
+.main-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* ==================== کارت‌ها ==================== */
+.controls-card,
+.performance-card,
+.chart-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.controls-card:hover,
+.performance-card:hover,
+.chart-card:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-2px);
+}
+
+/* ==================== کنترل‌ها ==================== */
+.controls-card {
+    padding: 2rem;
+}
+
+.control-group {
+    margin-bottom: 1.5rem;
+}
+
+.control-group:last-child {
+    margin-bottom: 0;
+}
+
+.control-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.control-label i {
+    color: var(--primary-color);
+    margin-left: 8px;
+    width: 20px;
+}
+
+/* ==================== سلکت ==================== */
+.select-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--text-primary);
+    background: #fafafa;
+    cursor: pointer;
+    transition: var(--transition);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 1rem center;
+    padding-left: 2.5rem;
+}
+
+.select-input:hover {
+    border-color: var(--primary-light);
+}
+
+.select-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    background-color: white;
+}
+
+.select-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ==================== دکمه‌ها ==================== */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.btn {
+    padding: 0.6rem 1.2rem;
+    border: 2px solid var(--border-color);
+    border-radius: 50px;
+    background: white;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: inherit;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(79, 70, 229, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn:hover {
+    background: #f9fafb;
+    border-color: var(--primary-light);
+    color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+}
+
+.btn.active:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.range-btn i {
+    margin-left: 5px;
+}
+
+/* ==================== بازه دلخواه ==================== */
+.custom-range-group {
+    background: #f8fafc;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    border: 2px dashed var(--border-color);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.date-inputs {
+    display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    align-items: flex-end;
 }
 
-.fund-tab {
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 25px;
-    background: #e0e0e0;
-    color: #333;
-    cursor: pointer;
-    font-size: 1rem;
+.date-input-wrapper {
+    flex: 1;
+    min-width: 200px;
+}
+
+.date-input-wrapper label {
+    display: block;
+    font-size: 0.85rem;
     font-weight: 600;
-    transition: all 0.3s ease;
-    font-family: inherit;
-}
-
-.fund-tab:hover {
-    background: #667eea;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.fund-tab.active {
-    background: #667eea;
-    color: white;
-    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.5);
-}
-
-.main-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-}
-
-.fund-info {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.fund-info h2 {
-    font-size: 2rem;
-    color: #1e3c72;
     margin-bottom: 0.5rem;
+    color: var(--text-secondary);
 }
 
-.fund-info p {
-    color: #666;
+.date-input {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--text-primary);
+    transition: var(--transition);
+    background: white;
+}
+
+.date-input:hover {
+    border-color: var(--primary-light);
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.date-input.error {
+    border-color: var(--danger-color);
+    background: #fef2f2;
+}
+
+.apply-btn {
+    background: var(--success-color);
+    color: white;
+    border-color: var(--success-color);
+    white-space: nowrap;
+}
+
+.apply-btn:hover {
+    background: #059669;
+    border-color: #059669;
+    color: white;
+}
+
+.date-hint {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.date-hint i {
+    color: var(--warning-color);
+}
+
+/* ==================== کارت عملکرد ==================== */
+.performance-card {
+    padding: 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.performance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.performance-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.badge {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.performance-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    transition: var(--transition);
+}
+
+.stat-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+    font-weight: 300;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.stat-unit {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-top: 0.25rem;
+}
+
+/* ==================== کارت نمودار ==================== */
+.chart-card {
+    padding: 2rem;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.chart-header h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.chart-header h3 i {
+    color: var(--primary-color);
+    margin-left: 8px;
+}
+
+.chart-legend {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 500px;
+    border-radius: var(--border-radius);
+    background: #fafafa;
+    overflow: hidden;
+}
+
+#chartContainer {
+    width: 100%;
+    height: 100%;
+}
+
+/* ==================== Loading و Error ==================== */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.95);
+    z-index: 10;
+    transition: opacity 0.3s;
+}
+
+.loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--border-color);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-overlay p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.error-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--danger-color);
+    background: #fef2f2;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    border: 2px solid #fecaca;
+}
+
+.error-message i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.error-message p {
+    font-weight: 600;
     font-size: 1.1rem;
 }
 
-.returns-type-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
+/* ==================== Responsive Design ==================== */
+@media (max-width: 1024px) {
+    .performance-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-.returns-tab {
-    padding: 0.6rem 1.2rem;
-    border: 2px solid #667eea;
-    border-radius: 20px;
-    background: transparent;
-    color: #667eea;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    font-family: inherit;
-}
-
-.returns-tab:hover {
-    background: #667eea10;
-}
-
-.returns-tab.active {
-    background: #667eea;
-    color: white;
-}
-
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-}
-
-.stat-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 1.5rem;
-    border-radius: 10px;
-    text-align: center;
-    color: white;
-    transition: transform 0.3s ease;
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
-}
-
-.stat-card .label {
-    font-size: 0.9rem;
-    opacity: 0.9;
-    margin-bottom: 0.5rem;
-}
-
-.stat-card .value {
-    font-size: 2rem;
-    font-weight: 700;
-}
-
-.stat-card .unit {
-    font-size: 1rem;
-    opacity: 0.8;
-}
-
-.chart-container {
-    background: #f8f9fa;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.loading {
-    text-align: center;
-    padding: 2rem;
-    color: #666;
-    font-size: 1.2rem;
-}
-
-.error {
-    text-align: center;
-    padding: 2rem;
-    color: #dc3545;
-    font-size: 1.2rem;
-    background: #f8d7da;
-    border-radius: 10px;
-    margin: 1rem 0;
-}
-
-.no-data {
-    text-align: center;
-    padding: 2rem;
-    color: #999;
-}
-
-/* Responsive Design */
 @media (max-width: 768px) {
     .header h1 {
         font-size: 1.8rem;
     }
     
     .header p {
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
     
-    .fund-tabs {
-        gap: 0.5rem;
-        padding: 1rem;
-    }
-    
-    .fund-tab {
-        padding: 0.6rem 1rem;
-        font-size: 0.9rem;
-    }
-    
-    .main-content {
-        padding: 1rem;
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-    }
-    
-    .stats-container {
-        grid-template-columns: repeat(2, 1fr);
+    .main-container {
+        padding: 0 1rem 2rem;
         gap: 1rem;
     }
     
-    .stat-card .value {
-        font-size: 1.5rem;
+    .controls-card,
+    .performance-card,
+    .chart-card {
+        padding: 1.5rem;
     }
     
-    .chart-container {
+    .performance-header h2 {
+        font-size: 1.4rem;
+    }
+    
+    .performance-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .stat-item {
         padding: 1rem;
     }
     
-    .fund-info h2 {
-        font-size: 1.5rem;
+    .stat-value {
+        font-size: 1.4rem;
+    }
+    
+    .chart-wrapper {
+        height: 350px;
+    }
+    
+    .button-group {
+        gap: 0.35rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 0.9rem;
+        font-size: 0.85rem;
+    }
+    
+    .date-inputs {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .date-input-wrapper {
+        min-width: 100%;
     }
 }
 
 @media (max-width: 480px) {
-    .fund-tab {
-        padding: 0.5rem 0.8rem;
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .btn {
+        padding: 0.45rem 0.75rem;
         font-size: 0.8rem;
     }
     
-    .returns-tab {
-        padding: 0.5rem 1rem;
-        font-size: 0.8rem;
+    .performance-header {
+        flex-direction: column;
+        text-align: center;
     }
     
-    .stats-container {
-        grid-template-columns: 1fr;
+    .chart-wrapper {
+        height: 300px;
+    }
+    
+    .control-label {
+        font-size: 0.9rem;
+    }
+}
+
+/* ==================== پرینت ==================== */
+@media print {
+    .header {
+        background: none;
+        color: black;
+        box-shadow: none;
+    }
+    
+    .controls-card {
+        display: none;
+    }
+    
+    .performance-card,
+    .chart-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    .chart-wrapper {
+        height: 400px;
+    }
+}
+
+/* ==================== انیمیشن‌ها ==================== */
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
     }
 }
