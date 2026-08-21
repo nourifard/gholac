@@ -1099,78 +1099,100 @@
             <!-- پنل‌ها به صورت داینامیک از JS اضافه می‌شوند -->
         </div>
     </section>
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نمودار بازدهی صندوق‌های سرمایه‌گذاری</title>
     
-    <!-- Chart Section -->
-    <section class="chart-section" id="chart-section">
-        <h2 class="section-title">نمودار <span class="highlight">بازدهی</span></h2>
-        <p class="section-subtitle">بررسی عملکرد صندوق‌ها در دوره‌های زمانی مختلف</p>
-        
-        <div class="chart-container-box">
-            <!-- Controls -->
-            <div class="chart-controls">
-                <label for="fundSelect">انتخاب صندوق:</label>
+    <!-- ECharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    
+    <!-- استایل -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <h1>صندوق‌های سرمایه‌گذاری</h1>
+        <p>نمودار تعاملی بازدهی</p>
+    </header>
+
+    <main class="container">
+        <!-- کنترل‌ها -->
+        <section class="controls-section">
+            <div class="control-row">
+                <label for="fundSelect">صندوق:</label>
                 <select id="fundSelect"></select>
-                
+            </div>
+
+            <div class="control-row">
                 <label>نوع قیمت:</label>
-                <div class="chart-type-btns" id="typeButtons"></div>
-                
-                <label>بازه:</label>
-                <div class="chart-range-btns" id="rangeButtons">
+                <div class="btn-group" id="typeButtons"></div>
+            </div>
+
+            <div class="control-row">
+                <label>بازه زمانی:</label>
+                <div class="btn-group" id="rangeButtons">
                     <button class="btn" data-range="1m">۱ ماه</button>
                     <button class="btn" data-range="3m">۳ ماه</button>
                     <button class="btn" data-range="6m">۶ ماه</button>
                     <button class="btn" data-range="9m">۹ ماه</button>
                     <button class="btn" data-range="1y">۱ سال</button>
                     <button class="btn" data-range="all">از ابتدا</button>
-                    <button class="btn" data-range="custom">دلخواه</button>
-                </div>
-                
-                <div class="custom-date-inputs" id="customDateInputs" style="display:none;">
-                    <input type="text" id="startDate" placeholder="از: 1404/01/01">
-                    <input type="text" id="endDate" placeholder="تا: 1405/05/27">
-                    <button class="btn-apply" id="applyCustomRange">اعمال</button>
+                    <button class="btn" data-range="custom">بازه دلخواه</button>
                 </div>
             </div>
-            
-            <!-- Info Bar -->
-            <div class="chart-info-bar">
-                <div class="chart-info-item">
-                    <div class="ci-label">صندوق</div>
-                    <div class="ci-value" id="fundName">-</div>
+
+            <div class="control-row custom-range" id="customRangeRow" style="display:none;">
+                <label>از تاریخ:</label>
+                <input type="text" id="startDate" placeholder="1404/05/28">
+                <label>تا تاریخ:</label>
+                <input type="text" id="endDate" placeholder="1405/05/27">
+                <button class="btn primary" id="applyCustomRange">اعمال</button>
+            </div>
+        </section>
+
+        <!-- اطلاعات عملکرد -->
+        <section class="info-section" id="infoSection">
+            <div class="info-header">
+                <h2 id="fundName">-</h2>
+                <span class="badge" id="typeBadge">-</span>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">بازدهی دوره</span>
+                    <span class="info-value" id="periodReturn">-</span>
                 </div>
-                <div class="chart-info-item">
-                    <div class="ci-label">نوع قیمت</div>
-                    <div class="ci-value" id="typeBadge">-</div>
+                <div class="info-item">
+                    <span class="info-label">تاریخ شروع</span>
+                    <span class="info-value" id="startDateInfo">-</span>
                 </div>
-                <div class="chart-info-item">
-                    <div class="ci-label">بازدهی دوره</div>
-                    <div class="ci-value" id="periodReturn">-</div>
+                <div class="info-item">
+                    <span class="info-label">تاریخ پایان</span>
+                    <span class="info-value" id="endDateInfo">-</span>
                 </div>
-                <div class="chart-info-item">
-                    <div class="ci-label">از تاریخ</div>
-                    <div class="ci-value" id="startDateInfo">-</div>
-                </div>
-                <div class="chart-info-item">
-                    <div class="ci-label">تا تاریخ</div>
-                    <div class="ci-value" id="endDateInfo">-</div>
-                </div>
-                <div class="chart-info-item">
-                    <div class="ci-label">آخرین بروزرسانی</div>
-                    <div class="ci-value" id="updatedAt" style="font-size:0.9rem;">-</div>
+                <div class="info-item">
+                    <span class="info-label">آخرین بروزرسانی</span>
+                    <span class="info-value" id="updatedAt">-</span>
                 </div>
             </div>
-            
-            <!-- Stats Cards -->
-            <div class="chart-stats-grid" id="statsGrid"></div>
-            
-            <!-- Chart Area -->
-            <div class="chart-area">
-                <div id="chart" style="width:100%;height:100%;"></div>
-                <div class="chart-loading" id="loading">در حال بارگذاری...</div>
-                <div class="chart-error" id="error" style="display:none;"></div>
-            </div>
-        </div>
-    </section>
+            <!-- کارت‌های بازدهی آماده -->
+            <div class="stats-grid" id="statsGrid"></div>
+        </section>
+
+        <!-- نمودار -->
+        <section class="chart-section">
+            <div id="chart" style="width:100%;height:500px;"></div>
+            <div class="loading" id="loading">در حال بارگذاری...</div>
+            <div class="error" id="error" style="display:none;"></div>
+        </section>
+
+
+
+
+    
     
     <!-- Footer -->
     <footer class="footer">
