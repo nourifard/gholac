@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>صندوق‌های سرمایه‌گذاری | قلک</title>
+
+    <meta
+        name="description"
+        content="معرفی صندوق‌های سرمایه‌گذاری قلک"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <!-- ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+
+    <div class="container header-inner">
+
+        <div class="brand">
+
+            <div class="brand-mark">
+                ق
+            </div>
+
+            <div>
+
+                <div class="brand-name">
+                    قلک
+                </div>
+
+                <div class="brand-subtitle">
+                    سرمایه‌گذاری هوشمند
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <nav class="nav">
+
+            <a href="#funds">
+                صندوق‌ها
+            </a>
+
+            <a href="#performance">
+                عملکرد
+            </a>
+
+            <a href="#about">
+                درباره ما
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero">
+
+    <div class="container hero-grid">
+
+
+        <div class="hero-content">
+
+            <div class="eyebrow">
+                سرمایه‌گذاری برای آینده
+            </div>
+
+            <h1>
+
+                انتخاب هوشمندانه،
+                <span>سرمایه‌گذاری مطمئن</span>
+
+            </h1>
+
+            <p>
+
+                مجموعه‌ای از صندوق‌های سرمایه‌گذاری
+                در حوزه‌های مختلف برای ساختن آینده‌ای
+                بهتر و متناسب با اهداف مالی شما.
+
+            </p>
+
+
+            <div class="hero-buttons">
+
+                <a
+                    href="#funds"
+                    class="btn btn-primary"
+                >
+                    مشاهده صندوق‌ها
+                </a>
+
+                <a
+                    href="#performance"
+                    class="btn btn-secondary"
+                >
+                    مشاهده عملکرد
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="hero-visual">
+
+            <div class="hero-card">
+
+                <div class="hero-card-label">
+                    عملکرد صندوق‌ها
+                </div>
+
+                <div class="hero-number">
+                    <span id="heroBestReturn">--</span>
+                    <small>٪</small>
+                </div>
+
+                <div class="hero-card-caption">
+                    بیشترین بازدهی یک‌ساله
+                </div>
+
+                <div class="hero-line"></div>
+
+                <div class="hero-dots">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FUNDS
+===================================================== -->
+
+<section
+    id="funds"
+    class="section"
+>
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <div class="section-label">
+                    صندوق‌های سرمایه‌گذاری
+                </div>
+
+                <h2>
+                    صندوق مناسب خود را پیدا کنید
+                </h2>
+
+            </div>
+
+            <p>
+                عملکرد صندوق‌ها را در بازه‌های مختلف
+                مقایسه کنید.
+            </p>
+
+        </div>
+
+
+        <!-- صندوق‌ها توسط JavaScript ساخته می‌شوند -->
+
+        <div
+            id="fundsGrid"
+            class="funds-grid"
+        ></div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     PERFORMANCE
+===================================================== -->
+
+<section
+    id="performance"
+    class="performance-section"
+>
+
+    <div class="container">
+
+
+        <div class="section-heading">
+
+            <div>
+
+                <div class="section-label">
+                    بررسی عملکرد
+                </div>
+
+                <h2>
+                    روند بازدهی صندوق‌ها
+                </h2>
+
+            </div>
+
+            <p>
+                روند تاریخی بازدهی را مشاهده و
+                بازه‌های مختلف را بررسی کنید.
+            </p>
+
+        </div>
+
+
+        <div class="chart-panel">
+
+
+            <!-- Chart Header -->
+
+            <div class="chart-header">
+
+
+                <div>
+
+                    <div
+                        id="selectedFundName"
+                        class="chart-title"
+                    >
+                        صندوق سمان
+                    </div>
+
+                    <div
+                        id="selectedFundType"
+                        class="chart-subtitle"
+                    >
+                        بازدهی بر اساس قیمت صدور
+                    </div>
+
+                </div>
+
+
+                <!-- Fund selector -->
+
+                <div
+                    id="fundSelector"
+                    class="fund-selector"
+                ></div>
+
+
+            </div>
+
+
+            <!-- Price type -->
+
+            <div class="price-tabs">
+
+                <button
+                    class="price-tab active"
+                    data-type="صدور"
+                >
+                    صدور
+                </button>
+
+                <button
+                    class="price-tab"
+                    data-type="ابطال"
+                >
+                    ابطال
+                </button>
+
+                <button
+                    class="price-tab"
+                    data-type="آماری"
+                >
+                    آماری
+                </button>
+
+            </div>
+
+
+            <!-- Chart -->
+
+            <div
+                id="performanceChart"
+                class="performance-chart"
+            ></div>
+
+
+            <div class="chart-footer">
+
+                <span>
+                    آخرین بروزرسانی:
+                </span>
+
+                <strong id="lastUpdate">
+                    --
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     CTA
+===================================================== -->
+
+<section class="cta">
+
+    <div class="container">
+
+        <div class="cta-box">
+
+            <div>
+
+                <div class="section-label">
+                    شروع یک مسیر جدید
+                </div>
+
+                <h2>
+                    سرمایه‌گذاری را هوشمندانه شروع کنید
+                </h2>
+
+                <p>
+                    با شناخت دقیق صندوق‌ها،
+                    تصمیم سرمایه‌گذاری بهتری بگیرید.
+                </p>
+
+            </div>
+
+
+            <a
+                href="#funds"
+                class="btn btn-light"
+            >
+                مشاهده صندوق‌ها
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer id="about">
+
+    <div class="container footer-inner">
+
+        <div>
+
+            <strong>
+                قلک
+            </strong>
+
+            <p>
+                سرمایه‌گذاری هوشمند برای آینده‌ای بهتر
+            </p>
+
+        </div>
+
+        <div class="footer-copy">
+
+            © ۱۴۰۵ قلک
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+
+<script src="js/app.js"></script>
+
+</body>
+
+</html>
