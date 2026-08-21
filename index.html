@@ -3,38 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>صندوق‌های سرمایه‌گذاری</title>
+    <title>نمودار بازدهی صندوق‌های سرمایه‌گذاری</title>
+    
+    <!-- ECharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    
+    <!-- Font Awesome برای آیکون‌ها -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- استایل اصلی -->
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <!-- هدر -->
     <header class="header">
-        <h1>صندوق‌های سرمایه‌گذاری</h1>
-        <p>معرفی و مقایسه بازدهی صندوق‌ها</p>
+        <div class="header-content">
+            <h1><i class="fas fa-chart-line"></i> صندوق‌های سرمایه‌گذاری</h1>
+            <p>نمودار تعاملی بازدهی صندوق‌ها</p>
+        </div>
     </header>
 
-    <nav class="fund-tabs" id="fundTabs">
-        <!-- تب‌های صندوق‌ها اینجا dynamically اضافه می‌شوند -->
-    </nav>
+    <!-- کانتینر اصلی -->
+    <main class="main-container">
+        <!-- کارت کنترل‌ها -->
+        <div class="controls-card">
+            <!-- انتخاب صندوق -->
+            <div class="control-group">
+                <label class="control-label">
+                    <i class="fas fa-building"></i>
+                    انتخاب صندوق:
+                </label>
+                <select id="fundSelect" class="select-input">
+                    <option value="">در حال بارگذاری...</option>
+                </select>
+            </div>
 
-    <main class="main-content">
-        <div class="fund-info" id="fundInfo">
-            <!-- اطلاعات صندوق انتخاب شده -->
+            <!-- انتخاب نوع قیمت -->
+            <div class="control-group">
+                <label class="control-label">
+                    <i class="fas fa-tags"></i>
+                    نوع قیمت:
+                </label>
+                <div class="button-group" id="returnsTypeButtons">
+                    <!-- دکمه‌ها به صورت داینامیک اضافه می‌شوند -->
+                </div>
+            </div>
+
+            <!-- انتخاب بازه زمانی -->
+            <div class="control-group">
+                <label class="control-label">
+                    <i class="fas fa-calendar-alt"></i>
+                    بازه زمانی:
+                </label>
+                <div class="button-group" id="rangeButtons">
+                    <button class="btn range-btn" data-range="1m">۱ ماه</button>
+                    <button class="btn range-btn" data-range="3m">۳ ماه</button>
+                    <button class="btn range-btn" data-range="6m">۶ ماه</button>
+                    <button class="btn range-btn" data-range="9m">۹ ماه</button>
+                    <button class="btn range-btn active" data-range="1y">۱ سال</button>
+                    <button class="btn range-btn" data-range="all">از ابتدا</button>
+                    <button class="btn range-btn" data-range="custom" id="customRangeBtn">
+                        <i class="fas fa-sliders-h"></i> بازه دلخواه
+                    </button>
+                </div>
+            </div>
+
+            <!-- بازه دلخواه -->
+            <div class="control-group custom-range-group" id="customRangeGroup" style="display: none;">
+                <label class="control-label">
+                    <i class="fas fa-calendar"></i>
+                    بازه دلخواه:
+                </label>
+                <div class="date-inputs">
+                    <div class="date-input-wrapper">
+                        <label>از تاریخ:</label>
+                        <input type="text" id="startDate" class="date-input" placeholder="1404/01/01">
+                    </div>
+                    <div class="date-input-wrapper">
+                        <label>تا تاریخ:</label>
+                        <input type="text" id="endDate" class="date-input" placeholder="1405/05/27">
+                    </div>
+                    <button class="btn apply-btn" id="applyCustomRange">
+                        <i class="fas fa-check"></i> اعمال
+                    </button>
+                </div>
+                <div class="date-hint">
+                    <i class="fas fa-info-circle"></i>
+                    فرمت تاریخ: شمسی (YYYY/MM/DD) - مثال: 1404/05/28
+                </div>
+            </div>
         </div>
 
-        <div class="returns-type-tabs" id="returnsTypeTabs">
-            <!-- تب‌های نوع قیمت (صدور، ابطال، آماری) -->
+        <!-- کارت اطلاعات عملکرد -->
+        <div class="performance-card" id="performanceCard">
+            <div class="performance-header">
+                <h2 id="fundNameDisplay">-</h2>
+                <span class="badge" id="returnsTypeBadge">صدور</span>
+            </div>
+            
+            <div class="performance-stats">
+                <div class="stat-item">
+                    <div class="stat-label">بازدهی دوره</div>
+                    <div class="stat-value" id="periodReturn">-</div>
+                    <div class="stat-unit">٪</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">تاریخ شروع</div>
+                    <div class="stat-value" id="startDateDisplay">-</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">تاریخ پایان</div>
+                    <div class="stat-value" id="endDateDisplay">-</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">آخرین بروزرسانی</div>
+                    <div class="stat-value" id="lastUpdate">-</div>
+                </div>
+            </div>
         </div>
 
-        <div class="stats-container" id="statsContainer">
-            <!-- کارت‌های آماری بازدهی -->
-        </div>
-
-        <div class="chart-container">
-            <canvas id="returnsChart"></canvas>
+        <!-- نمودار -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3>
+                    <i class="fas fa-chart-area"></i>
+                    نمودار بازدهی تجمعی
+                </h3>
+                <div class="chart-legend" id="chartLegend"></div>
+            </div>
+            
+            <!-- کانتینر نمودار -->
+            <div class="chart-wrapper" id="chartContainer">
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="spinner"></div>
+                    <p>در حال بارگذاری داده‌ها...</p>
+                </div>
+                <div class="error-message" id="errorMessage" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>خطا در بارگذاری داده‌ها</p>
+                </div>
+            </div>
         </div>
     </main>
 
-    <script src="js/app.js"></script>
+    <!-- اسکریپت اصلی -->
+    <script src="js/fund-chart.js"></script>
 </body>
 </html>
