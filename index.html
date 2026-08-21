@@ -3,91 +3,1404 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نمودار بازدهی صندوق‌های سرمایه‌گذاری</title>
+    <title>صندوق سرمایه‌گذاری قلک | مدیریت هوشمند دارایی</title>
+    
+    <!-- Google Fonts - Vazirmatn -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- ECharts CDN -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <!-- استایل -->
     <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        /* استایل‌های اضافی مخصوص این صفحه */
+        :root {
+            --navy-dark: #0d1b2a;
+            --navy: #1b2838;
+            --navy-light: #1e3c72;
+            --blue: #2a5298;
+            --blue-bright: #4f8cff;
+            --blue-pale: #e8f0fe;
+            --gold: #d4a843;
+            --gold-light: #f0d68a;
+            --text-light: #f5f7fa;
+            --text-muted: #9ca3af;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Vazirmatn', 'Vazir', 'IRANSans', 'Tahoma', sans-serif;
+            background: #f0f4f8;
+            color: #1a1a2e;
+            direction: rtl;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        
+        /* ============ Preloader ============ */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--navy-dark);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s, visibility 0.6s;
+        }
+        
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .preloader-logo {
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        .preloader-text {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        /* ============ Header / Hero ============ */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 30%, #1e3c72 60%, #2a5298 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            padding: 2rem 1rem;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(79, 140, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(212, 168, 67, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(30, 60, 114, 0.2) 0%, transparent 70%);
+            animation: heroGlow 8s ease-in-out infinite alternate;
+        }
+        
+        @keyframes heroGlow {
+            0% { opacity: 0.7; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.05); }
+        }
+        
+        .hero-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+        }
+        
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+        
+        .hero-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(212, 168, 67, 0.3);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+        
+        .hero-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .hero h1 .highlight {
+            color: var(--gold);
+            position: relative;
+        }
+        
+        .hero h1 .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 0;
+            left: 0;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 0.5rem;
+            font-weight: 300;
+        }
+        
+        .hero-description {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+            line-height: 2;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .hero-stat {
+            text-align: center;
+        }
+        
+        .hero-stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+        
+        .hero-stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .scroll-down {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1.5rem;
+            animation: bounceDown 2s infinite;
+            cursor: pointer;
+            z-index: 2;
+        }
+        
+        @keyframes bounceDown {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+        
+        /* ============ Navigation ============ */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(13, 27, 42, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .nav-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+        
+        /* ============ About Section ============ */
+        .about-section {
+            padding: 5rem 2rem;
+            background: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--navy-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title .highlight {
+            color: var(--blue-bright);
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .about-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .about-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--navy-light), var(--blue-bright));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        
+        .about-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .about-card:hover::before {
+            opacity: 1;
+        }
+        
+        .about-card-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--navy-light), var(--blue-bright));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .about-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--navy-dark);
+            margin-bottom: 0.75rem;
+        }
+        
+        .about-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+        
+        /* ============ Funds Section ============ */
+        .funds-section {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e8f0fe 50%, #f8fafc 100%);
+        }
+        
+        .funds-tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 3rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .fund-tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #d1d5db;
+            border-radius: 50px;
+            background: white;
+            color: #4b5563;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fund-tab-btn img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #e5e7eb;
+            transition: border-color 0.3s;
+        }
+        
+        .fund-tab-btn:hover {
+            border-color: var(--blue-bright);
+            color: var(--blue-bright);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .fund-tab-btn:hover img {
+            border-color: var(--blue-bright);
+        }
+        
+        .fund-tab-btn.active {
+            background: linear-gradient(135deg, var(--navy-light), var(--blue));
+            color: white;
+            border-color: var(--navy-light);
+            box-shadow: 0 5px 20px rgba(30, 60, 114, 0.4);
+        }
+        
+        .fund-tab-btn.active img {
+            border-color: var(--gold);
+        }
+        
+        .fund-tab-btn .tab-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+            border-radius: 2px;
+        }
+        
+        .fund-tab-btn.active .tab-indicator {
+            transform: scaleX(1);
+        }
+        
+        /* Fund Detail Panel */
+        .fund-detail-panel {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            max-width: 1100px;
+            margin: 0 auto;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .fund-detail-panel.active {
+            display: block;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fund-detail-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .fund-detail-logo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--gold);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+        
+        .fund-detail-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .fund-detail-title {
+            flex: 1;
+        }
+        
+        .fund-detail-title h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--navy-dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        .fund-detail-title .fund-type-tag {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: var(--blue-pale);
+            color: var(--blue);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .fund-detail-desc {
+            font-size: 1rem;
+            color: #4b5563;
+            line-height: 2;
+            margin-bottom: 1.5rem;
+            padding: 1.25rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-right: 4px solid var(--blue-bright);
+        }
+        
+        .fund-detail-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .fund-stat-box {
+            text-align: center;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, #f8fafc, #e8f0fe);
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .fund-stat-box .stat-num {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--navy-light);
+        }
+        
+        .fund-stat-box .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+        
+        /* Returns Table */
+        .returns-table-wrapper {
+            overflow-x: auto;
+        }
+        
+        .returns-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        
+        .returns-table th {
+            background: var(--navy-light);
+            color: white;
+            padding: 0.9rem 1rem;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        .returns-table td {
+            padding: 0.9rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+            color: #4b5563;
+            font-weight: 500;
+        }
+        
+        .returns-table tr:hover td {
+            background: #f8fafc;
+        }
+        
+        .returns-table .positive {
+            color: #10b981;
+            font-weight: 700;
+        }
+        
+        .returns-table .negative {
+            color: #ef4444;
+            font-weight: 700;
+        }
+        
+        /* ============ Chart Section ============ */
+        .chart-section {
+            padding: 5rem 2rem;
+            background: white;
+        }
+        
+        .chart-container-box {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .chart-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+        
+        .chart-controls label {
+            font-weight: 600;
+            color: var(--navy-dark);
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .chart-controls select {
+            padding: 0.55rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: white;
+            cursor: pointer;
+            min-width: 180px;
+        }
+        
+        .chart-controls select:focus {
+            outline: none;
+            border-color: var(--blue-bright);
+            box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.15);
+        }
+        
+        .chart-type-btns {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .chart-type-btns .btn {
+            padding: 0.55rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 50px;
+            background: white;
+            color: #4b5563;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.25s;
+        }
+        
+        .chart-type-btns .btn:hover {
+            border-color: var(--blue-bright);
+            color: var(--blue-bright);
+        }
+        
+        .chart-type-btns .btn.active {
+            background: var(--navy-light);
+            color: white;
+            border-color: var(--navy-light);
+        }
+        
+        .chart-range-btns {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .chart-range-btns .btn {
+            padding: 0.55rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 50px;
+            background: white;
+            color: #4b5563;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.25s;
+        }
+        
+        .chart-range-btns .btn:hover {
+            border-color: var(--blue-bright);
+            color: var(--blue-bright);
+        }
+        
+        .chart-range-btns .btn.active {
+            background: var(--blue-bright);
+            color: white;
+            border-color: var(--blue-bright);
+        }
+        
+        .custom-date-inputs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .custom-date-inputs input {
+            padding: 0.55rem 0.8rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            width: 120px;
+        }
+        
+        .custom-date-inputs input:focus {
+            outline: none;
+            border-color: var(--blue-bright);
+        }
+        
+        .custom-date-inputs .btn-apply {
+            padding: 0.55rem 1.2rem;
+            background: var(--blue-bright);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background 0.25s;
+        }
+        
+        .custom-date-inputs .btn-apply:hover {
+            background: var(--blue);
+        }
+        
+        /* Chart Info */
+        .chart-info-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-info-item {
+            text-align: center;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, var(--navy-light), var(--blue));
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .chart-info-item .ci-label {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+        
+        .chart-info-item .ci-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        /* Stats Cards */
+        .chart-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-stat-card {
+            text-align: center;
+            padding: 0.9rem;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .chart-stat-card .cs-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+        
+        .chart-stat-card .cs-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--navy-light);
+        }
+        
+        /* Chart Area */
+        .chart-area {
+            position: relative;
+            width: 100%;
+            height: 480px;
+            background: #fafbfc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        
+        .chart-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        
+        .chart-error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ef4444;
+            background: #fef2f2;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        /* ============ Footer ============ */
+        .footer {
+            background: var(--navy-dark);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 2rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .footer img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            border: 2px solid var(--gold);
+        }
+        
+        /* ============ Responsive ============ */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .hero-description {
+                font-size: 0.9rem;
+            }
+            
+            .hero-stats {
+                gap: 1.5rem;
+            }
+            
+            .hero-stat-value {
+                font-size: 1.8rem;
+            }
+            
+            .nav-bar {
+                padding: 0.5rem 1rem;
+            }
+            
+            .nav-links {
+                gap: 0.75rem;
+            }
+            
+            .nav-links a {
+                font-size: 0.75rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .funds-tabs {
+                gap: 0.5rem;
+            }
+            
+            .fund-tab-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .fund-tab-btn img {
+                width: 24px;
+                height: 24px;
+            }
+            
+            .fund-detail-panel {
+                padding: 1.5rem;
+            }
+            
+            .fund-detail-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .fund-detail-logo {
+                width: 70px;
+                height: 70px;
+                margin: 0 auto;
+            }
+            
+            .fund-detail-title h3 {
+                font-size: 1.4rem;
+            }
+            
+            .chart-area {
+                height: 320px;
+            }
+            
+            .chart-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-logo {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .about-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .fund-detail-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .returns-table {
+                font-size: 0.8rem;
+            }
+            
+            .returns-table th,
+            .returns-table td {
+                padding: 0.6rem 0.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header class="header">
-        <h1>صندوق‌های سرمایه‌گذاری</h1>
-        <p>نمودار تعاملی بازدهی</p>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-logo">
+            <i class="fas fa-piggy-bank"></i>
+        </div>
+        <div class="preloader-text">قلک | مدیریت هوشمند دارایی</div>
+    </div>
+    
+    <!-- Hero Section -->
+    <header class="hero" id="home">
+        <div class="hero-particles" id="particles"></div>
+        <div class="hero-content">
+            <div class="hero-logo">
+                <img src="gh.png" alt="صندوق قلک" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-piggy-bank\' style=\'font-size:3rem;color:#d4a843;\'></i>'">
+            </div>
+            <h1>صندوق سرمایه‌گذاری <span class="highlight">قلک</span></h1>
+            <p class="hero-subtitle">مدیریت هوشمند دارایی در بازار سرمایه</p>
+            <p class="hero-description">
+                با خدمات سبدگردانی و صندوق‌های سرمایه‌گذاری متنوع،
+                در کنار شما هستیم تا آینده مالی روشنی بسازیم.
+            </p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value">۵+</div>
+                    <div class="hero-stat-label">صندوق فعال</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">۱۰+</div>
+                    <div class="hero-stat-label">همت دارایی</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">اعتماد</div>
+                    <div class="hero-stat-label">سرمایه‌گذاران</div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-down" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
+            <i class="fas fa-chevron-down"></i>
+        </div>
     </header>
-
-    <main class="container">
-        <!-- کنترل‌ها -->
-        <section class="controls-section">
-            <div class="control-row">
-                <label for="fundSelect">صندوق:</label>
+    
+    <!-- Navigation -->
+    <nav class="nav-bar" id="navbar">
+        <div class="nav-logo">
+            <img src="gh.png" alt="قلک" onerror="this.style.display='none'">
+            <span>صندوق قلک</span>
+        </div>
+        <ul class="nav-links">
+            <li><a onclick="document.getElementById('home').scrollIntoView({behavior:'smooth'})">خانه</a></li>
+            <li><a onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">درباره ما</a></li>
+            <li><a onclick="document.getElementById('funds').scrollIntoView({behavior:'smooth'})">صندوق‌ها</a></li>
+            <li><a onclick="document.getElementById('chart-section').scrollIntoView({behavior:'smooth'})">نمودار بازدهی</a></li>
+        </ul>
+    </nav>
+    
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <h2 class="section-title">چرا <span class="highlight">قلک</span>؟</h2>
+        <p class="section-subtitle">با رویکردی حرفه‌ای و شفاف، در مسیر رشد سرمایه شما همراهیم</p>
+        <div class="about-cards">
+            <div class="about-card">
+                <div class="about-card-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>سبدگردانی حرفه‌ای</h3>
+                <p>مدیریت فعال و هوشمند پرتفوی با هدف حداکثرسازی بازدهی در کنار کنترل ریسک</p>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon"><i class="fas fa-layer-group"></i></div>
+                <h3>صندوق‌های متنوع</h3>
+                <p>از درآمد ثابت تا سهامی و کالایی، صندوقی متناسب با هر سطح ریسک پذیری داریم</p>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3>شفافیت کامل</h3>
+                <p>گزارش‌دهی منظم و شفاف از عملکرد صندوق‌ها برای اطمینان خاطر سرمایه‌گذاران</p>
+            </div>
+            <div class="about-card">
+                <div class="about-card-icon"><i class="fas fa-users"></i></div>
+                <h3>تیم متخصص</h3>
+                <p>بهره‌گیری از تحلیل‌گران و مدیران با تجربه در بازار سرمایه ایران</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Funds Section -->
+    <section class="funds-section" id="funds">
+        <h2 class="section-title">صندوق‌های <span class="highlight">سرمایه‌گذاری</span></h2>
+        <p class="section-subtitle">برای مشاهده جزئیات هر صندوق، روی آن کلیک کنید</p>
+        
+        <!-- Fund Tabs -->
+        <div class="funds-tabs" id="fundsTabs">
+            <!-- تب‌ها به صورت داینامیک از JS اضافه می‌شوند -->
+        </div>
+        
+        <!-- Fund Detail Panels -->
+        <div id="fundDetailPanels">
+            <!-- پنل‌ها به صورت داینامیک از JS اضافه می‌شوند -->
+        </div>
+    </section>
+    
+    <!-- Chart Section -->
+    <section class="chart-section" id="chart-section">
+        <h2 class="section-title">نمودار <span class="highlight">بازدهی</span></h2>
+        <p class="section-subtitle">بررسی عملکرد صندوق‌ها در دوره‌های زمانی مختلف</p>
+        
+        <div class="chart-container-box">
+            <!-- Controls -->
+            <div class="chart-controls">
+                <label for="fundSelect">انتخاب صندوق:</label>
                 <select id="fundSelect"></select>
-            </div>
-
-            <div class="control-row">
+                
                 <label>نوع قیمت:</label>
-                <div class="btn-group" id="typeButtons"></div>
-            </div>
-
-            <div class="control-row">
-                <label>بازه زمانی:</label>
-                <div class="btn-group" id="rangeButtons">
+                <div class="chart-type-btns" id="typeButtons"></div>
+                
+                <label>بازه:</label>
+                <div class="chart-range-btns" id="rangeButtons">
                     <button class="btn" data-range="1m">۱ ماه</button>
                     <button class="btn" data-range="3m">۳ ماه</button>
                     <button class="btn" data-range="6m">۶ ماه</button>
                     <button class="btn" data-range="9m">۹ ماه</button>
                     <button class="btn" data-range="1y">۱ سال</button>
                     <button class="btn" data-range="all">از ابتدا</button>
-                    <button class="btn" data-range="custom">بازه دلخواه</button>
+                    <button class="btn" data-range="custom">دلخواه</button>
+                </div>
+                
+                <div class="custom-date-inputs" id="customDateInputs" style="display:none;">
+                    <input type="text" id="startDate" placeholder="از: 1404/01/01">
+                    <input type="text" id="endDate" placeholder="تا: 1405/05/27">
+                    <button class="btn-apply" id="applyCustomRange">اعمال</button>
                 </div>
             </div>
-
-            <div class="control-row custom-range" id="customRangeRow" style="display:none;">
-                <label>از تاریخ:</label>
-                <input type="text" id="startDate" placeholder="1404/05/28">
-                <label>تا تاریخ:</label>
-                <input type="text" id="endDate" placeholder="1405/05/27">
-                <button class="btn primary" id="applyCustomRange">اعمال</button>
-            </div>
-        </section>
-
-        <!-- اطلاعات عملکرد -->
-        <section class="info-section" id="infoSection">
-            <div class="info-header">
-                <h2 id="fundName">-</h2>
-                <span class="badge" id="typeBadge">-</span>
-            </div>
-            <div class="info-grid">
-                <div class="info-item">
-                    <span class="info-label">بازدهی دوره</span>
-                    <span class="info-value" id="periodReturn">-</span>
+            
+            <!-- Info Bar -->
+            <div class="chart-info-bar">
+                <div class="chart-info-item">
+                    <div class="ci-label">صندوق</div>
+                    <div class="ci-value" id="fundName">-</div>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">تاریخ شروع</span>
-                    <span class="info-value" id="startDateInfo">-</span>
+                <div class="chart-info-item">
+                    <div class="ci-label">نوع قیمت</div>
+                    <div class="ci-value" id="typeBadge">-</div>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">تاریخ پایان</span>
-                    <span class="info-value" id="endDateInfo">-</span>
+                <div class="chart-info-item">
+                    <div class="ci-label">بازدهی دوره</div>
+                    <div class="ci-value" id="periodReturn">-</div>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">آخرین بروزرسانی</span>
-                    <span class="info-value" id="updatedAt">-</span>
+                <div class="chart-info-item">
+                    <div class="ci-label">از تاریخ</div>
+                    <div class="ci-value" id="startDateInfo">-</div>
+                </div>
+                <div class="chart-info-item">
+                    <div class="ci-label">تا تاریخ</div>
+                    <div class="ci-value" id="endDateInfo">-</div>
+                </div>
+                <div class="chart-info-item">
+                    <div class="ci-label">آخرین بروزرسانی</div>
+                    <div class="ci-value" id="updatedAt" style="font-size:0.9rem;">-</div>
                 </div>
             </div>
-            <!-- کارت‌های بازدهی آماده -->
-            <div class="stats-grid" id="statsGrid"></div>
-        </section>
-
-        <!-- نمودار -->
-        <section class="chart-section">
-            <div id="chart" style="width:100%;height:500px;"></div>
-            <div class="loading" id="loading">در حال بارگذاری...</div>
-            <div class="error" id="error" style="display:none;"></div>
-        </section>
-    </main>
-
+            
+            <!-- Stats Cards -->
+            <div class="chart-stats-grid" id="statsGrid"></div>
+            
+            <!-- Chart Area -->
+            <div class="chart-area">
+                <div id="chart" style="width:100%;height:100%;"></div>
+                <div class="chart-loading" id="loading">در حال بارگذاری...</div>
+                <div class="chart-error" id="error" style="display:none;"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <img src="gh.png" alt="قلک" onerror="this.style.display='none'">
+        <p>© ۱۴۰۴ - صندوق سرمایه‌گذاری قلک | تمامی حقوق محفوظ است</p>
+        <p style="margin-top:0.5rem;font-size:0.8rem;opacity:0.6;">مدیریت هوشمند دارایی در بازار سرمایه ایران</p>
+    </footer>
+    
+    <!-- اسکریپت اصلی -->
     <script src="js/fund-chart.js"></script>
+    
+    <script>
+        // ==================== Preloader ====================
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 1200);
+        });
+        
+        // ==================== Particles ====================
+        (function createParticles() {
+            const container = document.getElementById('particles');
+            if (!container) return;
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 8) + 's';
+                particle.style.animationDelay = (Math.random() * 5) + 's';
+                particle.style.width = (Math.random() * 4 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        })();
+        
+        // ==================== Funds Data (Dynamic from JSON) ====================
+        const fundDetails = {
+            'صندوق پایا': {
+                image: 'paya.png',
+                type: 'درآمد ثابت',
+                description: 'صندوق پایا یک صندوق درآمد ثابت است که با خرید اوراق دولتی و شرکتی و همچنین سپرده‌های بلندمدت بانکی، نرخ بدون ریسک و بازدهی مناسبی می‌سازد. این صندوق در طول دوره‌های مختلف جزو بهترین‌ها بوده و در حال حاضر با ۱۰ همت دارایی تحت مدیریت، بزرگ‌ترین صندوق شرکت است.',
+                aum: '۱۰ همت',
+                category: 'درآمد ثابت',
+                risk: 'پایین'
+            },
+            'صندوق سمان': {
+                image: 'sem.png',
+                type: 'سهامی - صنعت سیمان',
+                description: 'صندوق سمان با تمرکز بر صنعت سیمان، هدفش این است که بازدهی بهتر از تمامی سهام‌ها بسازد و سودآوری یونیت هولدرهایش را بالا ببرد. حدود ۱ همت دارایی تحت مدیریت این صندوق است.',
+                aum: '۱ همت',
+                category: 'سهامی',
+                risk: 'بالا'
+            },
+            'صندوق همتا': {
+                image: 'ham.png',
+                type: 'سهامی - گزینشی',
+                description: 'صندوق همتا با هدف گلچین کردن ۲۰ سهم از بهترین‌های بازار، یک صندوق سهامی است که عملکردش در دوره‌های مختلف بسیار خوب بوده است.',
+                aum: 'نامشخص',
+                category: 'سهامی',
+                risk: 'بالا'
+            },
+            'صندوق نیروانا': {
+                image: 'nir.png',
+                type: 'سهامی - صنعت برق',
+                description: 'صندوق نیروانا در صنعت برق و نیروگاهی متمرکز است و سعی کرده بهترین عملکرد را داشته باشد و بهترین‌ها را گلچین کند.',
+                aum: 'نامشخص',
+                category: 'سهامی',
+                risk: 'بالا'
+            },
+            'صندوق قلک گلد': {
+                image: 'gold.png',
+                type: 'کالایی - طلا',
+                description: 'صندوق قلک گلد یک صندوق تازه تأسیس است که فقط شمش طلا نگهداری می‌کند و هدفش دنبال کردن قیمت شمش طلا است.',
+                aum: 'نامشخص',
+                category: 'کالایی',
+                risk: 'متوسط'
+            }
+        };
+        
+        // ==================== Build Fund Tabs ====================
+        function buildFundTabs() {
+            const tabsContainer = document.getElementById('fundsTabs');
+            const panelsContainer = document.getElementById('fundDetailPanels');
+            
+            let tabsHTML = '';
+            let panelsHTML = '';
+            let isFirst = true;
+            
+            for (const [fundName, detail] of Object.entries(fundDetails)) {
+                const tabId = 'tab-' + fundName.replace(/\s+/g, '-');
+                const panelId = 'panel-' + fundName.replace(/\s+/g, '-');
+                
+                tabsHTML += `
+                    <button class="fund-tab-btn ${isFirst ? 'active' : ''}" data-panel="${panelId}" onclick="showFundPanel('${panelId}', this)">
+                        <img src="${detail.image}" alt="${fundName}" onerror="this.style.display='none'">
+                        <span>${fundName}</span>
+                        <span class="tab-indicator"></span>
+                    </button>
+                `;
+                
+                panelsHTML += `
+                    <div class="fund-detail-panel ${isFirst ? 'active' : ''}" id="${panelId}">
+                        <div class="fund-detail-header">
+                            <div class="fund-detail-logo">
+                                <img src="${detail.image}" alt="${fundName}" onerror="this.style.display='none'">
+                            </div>
+                            <div class="fund-detail-title">
+                                <h3>${fundName}</h3>
+                                <span class="fund-type-tag">${detail.type}</span>
+                            </div>
+                        </div>
+                        <div class="fund-detail-desc">
+                            ${detail.description}
+                        </div>
+                        <div class="fund-detail-stats">
+                            <div class="fund-stat-box">
+                                <div class="stat-num">${detail.aum}</div>
+                                <div class="stat-label">دارایی تحت مدیریت (AUM)</div>
+                            </div>
+                            <div class="fund-stat-box">
+                                <div class="stat-num">${detail.category}</div>
+                                <div class="stat-label">دسته‌بندی</div>
+                            </div>
+                            <div class="fund-stat-box">
+                                <div class="stat-num">${detail.risk}</div>
+                                <div class="stat-label">سطح ریسک</div>
+                            </div>
+                        </div>
+                        <div class="returns-table-wrapper">
+                            <table class="returns-table">
+                                <thead>
+                                    <tr>
+                                        <th>نوع قیمت</th>
+                                        <th>یک ماهه</th>
+                                        <th>سه ماهه</th>
+                                        <th>شش ماهه</th>
+                                        <th>نه ماهه</th>
+                                        <th>یک ساله</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="returnsTableBody-${panelId}">
+                                    <tr>
+                                        <td colspan="6" style="text-align:center;color:#9ca3af;">در حال بارگذاری...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                
+                isFirst = false;
+            }
+            
+            tabsContainer.innerHTML = tabsHTML;
+            panelsContainer.innerHTML = panelsHTML;
+        }
+        
+        // ==================== Show Fund Panel ====================
+        function showFundPanel(panelId, btnElement) {
+            // Hide all panels
+            document.querySelectorAll('.fund-detail-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // Show selected panel
+            document.getElementById(panelId).classList.add('active');
+            
+            // Update active tab
+            document.querySelectorAll('.fund-tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            btnElement.classList.add('active');
+        }
+        
+        // ==================== Populate Returns Table from JSON ====================
+        async function populateReturnsTables() {
+            try {
+                const res = await fetch('./funds.json');
+                const data = await res.json();
+                
+                if (!data.funds || data.funds.length === 0) return;
+                
+                data.funds.forEach(fundData => {
+                    const fundName = fundData.fund.name;
+                    const panelId = 'panel-' + fundName.replace(/\s+/g, '-');
+                    const tableBody = document.getElementById('returnsTableBody-' + panelId);
+                    
+                    if (!tableBody) return;
+                    
+                    let rowsHTML = '';
+                    const returns = fundData.returns || {};
+                    
+                    for (const [type, typeData] of Object.entries(returns)) {
+                        if (!typeData) continue;
+                        
+                        const formatVal = (val) => {
+                            if (val === null || val === undefined) return '-';
+                            const num = val.toFixed(2);
+                            const cls = val >= 0 ? 'positive' : 'negative';
+                            return `<span class="${cls}">${num}%</span>`;
+                        };
+                        
+                        rowsHTML += `
+                            <tr>
+                                <td><strong>${type}</strong></td>
+                                <td>${formatVal(typeData.monthly)}</td>
+                                <td>${formatVal(typeData.three_months)}</td>
+                                <td>${formatVal(typeData.six_months)}</td>
+                                <td>${formatVal(typeData.nine_months)}</td>
+                                <td>${formatVal(typeData.yearly)}</td>
+                            </tr>
+                        `;
+                    }
+                    
+                    if (rowsHTML === '') {
+                        rowsHTML = '<tr><td colspan="6" style="text-align:center;color:#9ca3af;">داده‌ای موجود نیست</td></tr>';
+                    }
+                    
+                    tableBody.innerHTML = rowsHTML;
+                });
+            } catch (err) {
+                console.error('Error loading returns data:', err);
+            }
+        }
+        
+        // ==================== Init ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            buildFundTabs();
+            populateReturnsTables();
+        });
+    </script>
 </body>
 </html>
