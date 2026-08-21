@@ -550,4 +550,19 @@ function renderChart(fundData) {
 }
 
 // ==================== Init ====================
-document.addEventListener('DOMContentLoaded', loadFunds);
+// ==================== Init ====================
+// صبر کن تا کل صفحه لود بشه
+window.addEventListener('load', () => {
+    // کمی تأخیر برای اطمینان از لود شدن همه چیز
+    setTimeout(() => {
+        loadFunds();
+    }, 500);
+});
+
+// همچنین DOMContentLoaded هم چک کن
+document.addEventListener('DOMContentLoaded', () => {
+    // اگر هنوز لود نشده، لود کن
+    if (allFunds.length === 0) {
+        loadFunds();
+    }
+});
