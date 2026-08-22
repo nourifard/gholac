@@ -1110,19 +1110,20 @@
         .chart-stat-card {
             text-align: center;
             padding: 0.8rem;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-glass);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: var(--radius-sm);
             transition: var(--transition-smooth);
         }
         
         .chart-stat-card:hover {
-            border-color: rgba(25, 117, 211, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(25, 117, 211, 0.4);
         }
         
         .chart-stat-card .cs-label {
             font-size: 0.7rem;
-            color: var(--text-400);
+            color: var(--text-300);
         }
         
         .chart-stat-card .cs-value {
@@ -1615,10 +1616,15 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <img src="gh.png" alt="قلک" onerror="this.style.display='none'">
-        <p>© ۱۴۰۴ - صندوق سرمایه‌گذاری قلک | تمامی حقوق محفوظ است</p>
-        <p style="margin-top:0.5rem;font-size:0.8rem;opacity:0.6;">مدیریت هوشمند دارایی در بازار سرمایه ایران</p>
+    <!-- Footer -->
+    <footer class="footer" style="background: #0a0e1a; padding: 3rem 1rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.08);">
+        <div style="max-width: 600px; margin: 0 auto;">
+            <div style="width: 70px; height: 70px; border-radius: 50%; overflow: hidden; margin: 0 auto 1.25rem; border: 3px solid #c9a84c; box-shadow: 0 0 30px rgba(201,168,76,0.25); background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;">
+                <img src="gh.png" alt="قلک" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-piggy-bank\' style=\'font-size:1.8rem;color:#c9a84c;\'></i>';">
+            </div>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.5rem;">© ۱۴۰۴ - صندوق سرمایه‌گذاری قلک | تمامی حقوق محفوظ است</p>
+            <p style="color: #64748b; font-size: 0.8rem;">مدیریت هوشمند دارایی در بازار سرمایه ایران</p>
+        </div>
     </footer>
     
     <!-- اسکریپت اصلی -->
