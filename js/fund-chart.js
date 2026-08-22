@@ -464,18 +464,27 @@ function renderChart(fundData) {
         chartInstance = echarts.init(chartEl);
     }
     
-    const primaryColor = '#1e3c72';
-    const primaryLight = '#2a5298';
+    // ==================== رنگ‌های نمودار (آبی روشن) ====================
+    const lineColor = '#4dabf7';        // آبی روشن برای خط
+    const lineGlow = 'rgba(77, 171, 247, 0.5)';
+    const areaTopColor = 'rgba(77, 171, 247, 0.35)';
+    const areaMidColor = 'rgba(33, 150, 243, 0.15)';
+    const areaBottomColor = 'rgba(33, 150, 243, 0.02)';
+    const axisLabelColor = '#e2e8f0';
+    const axisLineColor = '#334155';
+    const splitLineColor = '#1e293b';
+    const tooltipBg = 'rgba(15, 21, 37, 0.95)';
+    const tooltipBorder = '#4dabf7';
     
     const option = {
         tooltip: {
             trigger: 'axis',
-            backgroundColor: 'rgba(255, 255, 255, 0.98)',
-            borderColor: primaryLight,
+            backgroundColor: tooltipBg,
+            borderColor: tooltipBorder,
             borderWidth: 2,
-            padding: [12, 16],
+            padding: [14, 18],
             textStyle: { 
-                color: '#1a1a1a', 
+                color: '#f1f5f9', 
                 fontFamily: 'Vazirmatn, Vazir, IRANSans, Tahoma',
                 fontSize: 13
             },
@@ -487,10 +496,10 @@ function renderChart(fundData) {
                 const value = p.value;
                 
                 return `<div style="direction:rtl;text-align:right;font-family:Vazirmatn,Vazir,IRANSans,Tahoma;">
-                    <div style="font-weight:bold;margin-bottom:6px;font-size:14px;">${fullDate}</div>
-                    <div style="display:flex;align-items:center;gap:8px;">
-                        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${primaryLight};"></span>
-                        <span>بازدهی تجمعی: <strong style="color:${primaryLight};">${value.toFixed(2)}%</strong></span>
+                    <div style="font-weight:bold;margin-bottom:8px;font-size:15px;color:#f1f5f9;">${fullDate}</div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${lineColor};box-shadow:0 0 8px ${lineColor};"></span>
+                        <span style="color:#cbd5e1;">بازدهی تجمعی: <strong style="color:${lineColor};font-size:16px;">${value.toFixed(2)}%</strong></span>
                     </div>
                 </div>`;
             }
@@ -507,18 +516,18 @@ function renderChart(fundData) {
             data: fullDates,
             boundaryGap: false,
             axisLine: {
-                lineStyle: { color: '#d1d5db' }
+                lineStyle: { color: axisLineColor, width: 1.5 }
             },
             axisTick: {
                 show: false
             },
             axisLabel: {
-                fontSize: 11,
-                color: '#4b5563',
+                fontSize: 12,
+                color: axisLabelColor,
                 fontFamily: 'Vazirmatn, Vazir, IRANSans, Tahoma',
                 interval: labelInterval,
                 rotate: dataLength > 30 ? 30 : 0,
-                margin: 12,
+                margin: 14,
                 formatter: function(value) {
                     const p = value.split('/');
                     if (p.length === 3) {
@@ -533,19 +542,19 @@ function renderChart(fundData) {
             name: 'بازدهی (%)',
             nameTextStyle: { 
                 fontFamily: 'Vazirmatn, Vazir, IRANSans, Tahoma', 
-                fontSize: 12,
-                color: '#4b5563',
-                padding: [0, 0, 0, 10]
+                fontSize: 13,
+                color: axisLabelColor,
+                padding: [0, 0, 0, 12]
             },
             axisLabel: {
-                fontSize: 11,
-                color: '#4b5563',
+                fontSize: 12,
+                color: axisLabelColor,
                 fontFamily: 'Vazirmatn, Vazir, IRANSans, Tahoma',
                 formatter: '{value}%'
             },
             splitLine: {
                 lineStyle: { 
-                    color: '#f3f4f6', 
+                    color: splitLineColor, 
                     type: 'dashed',
                     width: 1
                 }
@@ -565,25 +574,35 @@ function renderChart(fundData) {
                 type: 'slider', 
                 start: 0, 
                 end: 100,
-                height: 25,
-                bottom: 5,
-                borderColor: '#e5e7eb',
-                backgroundColor: '#fafafa',
-                fillerColor: 'rgba(30, 60, 114, 0.15)',
+                height: 28,
+                bottom: 8,
+                borderColor: '#334155',
+                backgroundColor: '#0f1525',
+                fillerColor: 'rgba(77, 171, 247, 0.15)',
                 handleStyle: { 
-                    color: primaryLight,
-                    borderColor: primaryLight
+                    color: lineColor,
+                    borderColor: lineColor
                 },
                 moveHandleStyle: {
-                    color: primaryLight
+                    color: lineColor
                 },
                 textStyle: { 
-                    fontSize: 10, 
+                    fontSize: 11, 
                     fontFamily: 'Vazirmatn, Vazir, IRANSans, Tahoma',
-                    color: '#4b5563'
+                    color: '#cbd5e1'
                 },
                 showDetail: true,
-                showDataShadow: true
+                showDataShadow: true,
+                dataBackground: {
+                    lineStyle: {
+                        color: lineColor,
+                        opacity: 0.3
+                    },
+                    areaStyle: {
+                        color: 'rgba(77, 171, 247, 0.05)',
+                        opacity: 0.5
+                    }
+                }
             }
         ],
         series: [{
@@ -593,61 +612,76 @@ function renderChart(fundData) {
             smooth: true,
             smoothMonotone: 'x',
             symbol: 'circle',
-            symbolSize: 5,
+            symbolSize: 6,
             showSymbol: false,
+            
+            // خط نمودار - آبی روشن
             lineStyle: {
-                width: 2.5,
-                color: primaryLight,
-                shadowColor: 'rgba(42, 82, 152, 0.3)',
-                shadowBlur: 8,
-                shadowOffsetY: 3,
+                width: 3,
+                color: lineColor,
+                shadowColor: lineGlow,
+                shadowBlur: 12,
+                shadowOffsetY: 5,
                 cap: 'round'
             },
+            
+            // ناحیه زیر نمودار - گرادیان آبی روشن
             areaStyle: {
                 color: {
                     type: 'linear',
                     x: 0, y: 0, x2: 0, y2: 1,
                     colorStops: [
-                        { offset: 0, color: 'rgba(42, 82, 152, 0.35)' },
-                        { offset: 0.5, color: 'rgba(42, 82, 152, 0.15)' },
-                        { offset: 1, color: 'rgba(42, 82, 152, 0.02)' }
+                        { offset: 0, color: areaTopColor },
+                        { offset: 0.5, color: areaMidColor },
+                        { offset: 1, color: areaBottomColor }
                     ]
                 }
             },
+            
+            // نقاط نمودار
             itemStyle: {
-                color: primaryLight,
-                borderColor: '#ffffff',
+                color: lineColor,
+                borderColor: '#0a0e1a',
                 borderWidth: 2
             },
+            
+            // حالت hover
             emphasis: {
                 focus: 'series',
                 lineStyle: { 
-                    width: 3.5,
-                    shadowBlur: 12
+                    width: 4,
+                    shadowBlur: 20,
+                    shadowColor: 'rgba(77, 171, 247, 0.6)'
                 },
                 itemStyle: {
                     borderWidth: 3,
-                    shadowBlur: 8
+                    shadowBlur: 12,
+                    shadowColor: 'rgba(77, 171, 247, 0.5)'
                 }
             },
-            animationDuration: 1000,
+            
+            // انیمیشن
+            animationDuration: 1200,
             animationEasing: 'cubicOut',
-            animationDurationUpdate: 500,
+            animationDurationUpdate: 600,
             animationEasingUpdate: 'cubicInOut'
         }],
+        
+        // Legend
         legend: {
             show: true,
             top: 0,
             right: 0,
             textStyle: {
                 fontFamily: 'Vazirmatn, Vazir, IRANSans, Tahoma',
-                fontSize: 12,
-                color: '#4b5563'
+                fontSize: 13,
+                color: '#e2e8f0'
             },
             icon: 'roundRect',
-            itemWidth: 16,
+            itemWidth: 20,
             itemHeight: 8
         },
+        
         backgroundColor: 'transparent'
     };
     
