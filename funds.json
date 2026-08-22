@@ -6,7 +6,7 @@
         "english_name": "Saman Fund",
         "basketId": 2
       },
-      "updated_at": "2026-08-22T16:05:11.426581",
+      "updated_at": "2026-08-22T16:06:34.497788",
       "returns": {
         "صدور": {
           "monthly": 13.0,
@@ -21252,7 +21252,7 @@
         "english_name": "Nirvana Fund",
         "basketId": 3
       },
-      "updated_at": "2026-08-22T16:05:12.109739",
+      "updated_at": "2026-08-22T16:06:34.990711",
       "returns": {
         "صدور": {
           "monthly": 33.2,
@@ -29103,7 +29103,7 @@
         "english_name": "Hamta Fund",
         "basketId": 1
       },
-      "updated_at": "2026-08-22T16:05:12.694944",
+      "updated_at": "2026-08-22T16:06:35.514229",
       "returns": {
         "صدور": {
           "monthly": 17.96,
@@ -43539,7 +43539,7 @@
         "english_name": "Gholak Gold Fund",
         "basketId": 2
       },
-      "updated_at": "2026-08-22T16:05:13.215762",
+      "updated_at": "2026-08-22T16:06:35.930282",
       "returns": {
         "صدور": {
           "monthly": 6.03,
@@ -45145,5 +45145,5 @@
       }
     }
   ],
-  "updated_at": "2026-08-22T16:05:13.652346"
+  "updated_at": "2026-08-22T16:06:36.310362"
 }
