@@ -45,7 +45,7 @@ function compareShamsi(a, b) {
 }
 
 function shamsiToKey(str) {
-    const p = parseShamsi(str);
+     p = parseShamsi(str);
     return p.year * 10000 + p.month * 100 + p.day;
 }
 
@@ -57,9 +57,9 @@ function subtractMonthsShamsi(dateStr, months) {
         year--;
     }
     // Persian month lengths
-    const leapYears = [1, 5, 9, 13, 17, 22, 26, 30];
-    const cycleIndex = ((year - 1300) % 33 + 33) % 33;
-    const isLeap = leapYears.includes(cycleIndex);
+     leapYears = [1, 5, 9, 13, 17, 22, 26, 30];
+     cycleIndex = ((year - 1300) % 33 + 33) % 33;
+     isLeap = leapYears.includes(cycleIndex);
     let maxDay;
     if (month <= 6) maxDay = 31;
     else if (month <= 11) maxDay = 30;
@@ -71,11 +71,11 @@ function subtractMonthsShamsi(dateStr, months) {
 
 function findClosestDate(trendData, targetDateStr) {
     if (!trendData || trendData.length === 0) return null;
-    const targetKey = shamsiToKey(targetDateStr);
+     targetKey = shamsiToKey(targetDateStr);
     let closest = trendData[0];
     let minDiff = Infinity;
-    for (const item of trendData) {
-        const diff = Math.abs(shamsiToKey(item.x) - targetKey);
+    for ( item of trendData) {
+         diff = Math.abs(shamsiToKey(item.x) - targetKey);
         if (diff < minDiff) {
             minDiff = diff;
             closest = item;
@@ -97,14 +97,14 @@ async function loadFunds() {
     if (errorEl) errorEl.style.display = 'none';
     
     try {
-        const res = await fetch('./funds.json', { cache: 'no-cache' });
+         res = await fetch('./funds.json', { cache: 'no-cache' });
         console.log('Fetch response status:', res.status);
         
         if (!res.ok) {
             throw new Error(`HTTP ${res.status}`);
         }
         
-        const data = await res.json();
+         data = await res.json();
         console.log('Data loaded:', data);
         
         if (!data || !Array.isArray(data.funds) || data.funds.length === 0) {
@@ -141,7 +141,7 @@ function initControls() {
     if (fundSelect) {
         fundSelect.innerHTML = '';
         allFunds.forEach((fundData, idx) => {
-            const opt = document.createElement('option');
+             opt = document.createElement('option');
             opt.value = idx;
             opt.textContent = fundData.fund.name;
             fundSelect.appendChild(opt);
@@ -160,7 +160,7 @@ function initControls() {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                const range = btn.dataset.range;
+                 range = btn.dataset.range;
                 console.log('Range button clicked:', range);
                 setRange(range);
             });
@@ -254,7 +254,7 @@ function applyCustomRange() {
     console.log('Converted dates - Start:', startStr, 'End:', endStr);
     
     // Validate format
-    const pattern = /^\d{4}\/\d{2}\/\d{2}$/;
+     pattern = /^\d{4}\/\d{2}\/\d{2}$/;
     if (!pattern.test(startStr) || !pattern.test(endStr)) {
         alert('فرمت تاریخ باید YYYY/MM/DD باشد\nمثال: 1404/05/28');
         return;
@@ -281,11 +281,11 @@ function renderAll() {
     
     if (allFunds.length === 0) return;
     
-    const fundData = allFunds[currentFundIndex];
+     fundData = allFunds[currentFundIndex];
     if (!fundData) return;
     
     // Get available types for this fund
-    const availableTypes = Object.keys(fundData.returns || {});
+     availableTypes = Object.keys(fundData.returns || {});
     
     // If current type is invalid, set to first available
     if (!currentType || !availableTypes.includes(currentType)) {
@@ -310,7 +310,7 @@ function renderTypeButtons(availableTypes) {
     if (availableTypes.length === 0) return;
     
     availableTypes.forEach(type => {
-        const btn = document.createElement('button');
+         btn = document.createElement('button');
         btn.className = 'btn';
         btn.textContent = type;
         btn.dataset.type = type;
@@ -324,7 +324,7 @@ function renderTypeButtons(availableTypes) {
 }
 
 function renderInfo(fundData) {
-    const returnsData = fundData.returns && fundData.returns[currentType];
+     returnsData = fundData.returns && fundData.returns[currentType];
     if (!returnsData) return;
     
     if (fundNameEl) fundNameEl.textContent = fundData.fund.name || '-';
@@ -334,7 +334,7 @@ function renderInfo(fundData) {
     if (updatedAtEl) {
         if (fundData.updated_at) {
             try {
-                const d = new Date(fundData.updated_at);
+                 d = new Date(fundData.updated_at);
                 updatedAtEl.textContent = d.toLocaleDateString('fa-IR');
             } catch (e) {
                 updatedAtEl.textContent = '-';
@@ -346,7 +346,7 @@ function renderInfo(fundData) {
     
     // Stats cards (monthly, three_months, six_months, nine_months, yearly)
     if (statsGridEl) {
-        const stats = [
+         stats = [
             { label: 'یک ماهه', value: returnsData.monthly },
             { label: 'سه ماهه', value: returnsData.three_months },
             { label: 'شش ماهه', value: returnsData.six_months },
@@ -372,7 +372,7 @@ function renderChart(fundData) {
         return;
     }
     
-    const returnsData = fundData.returns[currentType];
+     returnsData = fundData.returns[currentType];
     
     if (!returnsData || !returnsData.daily_trend || returnsData.daily_trend.length === 0) {
         showChartError('داده‌ای برای نمودار موجود نیست');
@@ -382,7 +382,7 @@ function renderChart(fundData) {
     if (errorEl) errorEl.style.display = 'none';
     
     // Sort by date
-    const sortedTrend = [...returnsData.daily_trend]
+     sortedTrend = [...returnsData.daily_trend]
         .filter(item => item && item.x && typeof item.y === 'number' && !isNaN(item.y))
         .sort((a, b) => shamsiToKey(a.x) - shamsiToKey(b.x));
     
@@ -398,21 +398,21 @@ function renderChart(fundData) {
     console.log('Custom dates:', customStart, customEnd);
     
     if (currentRange === 'custom' && customStart && customEnd) {
-        const startKey = shamsiToKey(customStart);
-        const endKey = shamsiToKey(customEnd);
+         startKey = shamsiToKey(customStart);
+         endKey = shamsiToKey(customEnd);
         filteredTrend = sortedTrend.filter(item => {
-            const key = shamsiToKey(item.x);
+             key = shamsiToKey(item.x);
             return key >= startKey && key <= endKey;
         });
         console.log('Filtered by custom range:', filteredTrend.length, 'items');
     } else if (currentRange !== 'all' && currentRange !== 'custom' && sortedTrend.length > 0) {
-        const monthsMap = { '1m': 1, '3m': 3, '6m': 6, '9m': 9, '1y': 12 };
-        const months = monthsMap[currentRange];
+         monthsMap = { '1m': 1, '3m': 3, '6m': 6, '9m': 9, '1y': 12 };
+         months = monthsMap[currentRange];
         
         if (months) {
-            const latestDate = sortedTrend[sortedTrend.length - 1].x;
-            const cutoffDate = subtractMonthsShamsi(latestDate, months);
-            const cutoffKey = shamsiToKey(cutoffDate);
+             latestDate = sortedTrend[sortedTrend.length - 1].x;
+             cutoffDate = subtractMonthsShamsi(latestDate, months);
+             cutoffKey = shamsiToKey(cutoffDate);
             filteredTrend = sortedTrend.filter(item => shamsiToKey(item.x) >= cutoffKey);
             console.log(`Filtered by ${months} months:`, filteredTrend.length, 'items');
         }
@@ -424,18 +424,18 @@ function renderChart(fundData) {
     }
     
     // Update info
-    const firstPoint = filteredTrend[0];
-    const lastPoint = filteredTrend[filteredTrend.length - 1];
+     firstPoint = filteredTrend[0];
+     lastPoint = filteredTrend[filteredTrend.length - 1];
     
     if (startDateInfoEl) startDateInfoEl.textContent = firstPoint.x;
     if (endDateInfoEl) endDateInfoEl.textContent = lastPoint.x;
     
     // Calculate period return using compound formula
-    const rStart = firstPoint.y;
-    const rEnd = lastPoint.y;
+     rStart = firstPoint.y;
+     rEnd = lastPoint.y;
     
     if (rStart !== null && rEnd !== null && rStart !== undefined && rEnd !== undefined) {
-        const periodReturn = ((1 + rEnd / 100) / (1 + rStart / 100) - 1) * 100;
+         periodReturn = ((1 + rEnd / 100) / (1 + rStart / 100) - 1) * 100;
         if (periodReturnEl) {
             periodReturnEl.textContent = periodReturn.toFixed(2) + '%';
             periodReturnEl.style.color = periodReturn >= 0 ? '#10b981' : '#ef4444';
@@ -446,14 +446,14 @@ function renderChart(fundData) {
     }
     
     // Prepare chart data
-    const dates = filteredTrend.map(item => item.x);
-    const values = filteredTrend.map(item => item.y);
+     dates = filteredTrend.map(item => item.x);
+     values = filteredTrend.map(item => item.y);
     
     // Full date labels
-    const fullDates = dates.map(d => d);
+     fullDates = dates.map(d => d);
     
     // Calculate smart label interval
-    const dataLength = filteredTrend.length;
+     dataLength = filteredTrend.length;
     let labelInterval = 0;
     if (dataLength > 60) labelInterval = Math.floor(dataLength / 12);
     else if (dataLength > 30) labelInterval = Math.floor(dataLength / 8);
@@ -464,10 +464,11 @@ function renderChart(fundData) {
         chartInstance = echarts.init(chartEl);
     }
     
-    const primaryColor = '#1e3c72';
-    const primaryLight = '#2a5298';
-    
-    const option = {
+     primaryColor = '#4dabf7';
+     primaryLight = '#2196f3';
+     accentColor = '#90caf9';       // آبی خیلی روشن
+
+     option = {
         tooltip: {
             trigger: 'axis',
             backgroundColor: 'rgba(255, 255, 255, 0.98)',
@@ -513,12 +514,12 @@ function renderChart(fundData) {
                 show: false
             },
             axisLabel: {
-                fontSize: 11,
-                color: '#4b5563',
+                fontSize: 12,
+                color: '#e2e8f0',  // روشن‌تر
                 fontFamily: 'Vazirmatn, Vazir, IRANSans, Tahoma',
                 interval: labelInterval,
                 rotate: dataLength > 30 ? 30 : 0,
-                margin: 12,
+                margin: 14,
                 formatter: function(value) {
                     const p = value.split('/');
                     if (p.length === 3) {
@@ -526,7 +527,7 @@ function renderChart(fundData) {
                     }
                     return value;
                 }
-            }
+            },
         },
         yAxis: {
             type: 'value',
@@ -596,8 +597,8 @@ function renderChart(fundData) {
             symbolSize: 5,
             showSymbol: false,
             lineStyle: {
-                width: 2.5,
-                color: primaryLight,
+                width: 4.5,
+                color: '#4dabf7',
                 shadowColor: 'rgba(42, 82, 152, 0.3)',
                 shadowBlur: 8,
                 shadowOffsetY: 3,
